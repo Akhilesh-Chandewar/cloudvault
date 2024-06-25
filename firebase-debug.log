@@ -1,0 +1,88 @@
+[debug] [2024-06-25T05:11:50.635Z] ----------------------------------------------------------------------
+[debug] [2024-06-25T05:11:50.639Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Admin\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-06-25T05:11:50.639Z] CLI Version:   13.11.4
+[debug] [2024-06-25T05:11:50.639Z] Platform:      win32
+[debug] [2024-06-25T05:11:50.639Z] Node Version:  v20.14.0
+[debug] [2024-06-25T05:11:50.640Z] Time:          Tue Jun 25 2024 10:41:50 GMT+0530 (India Standard Time)
+[debug] [2024-06-25T05:11:50.640Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-06-25T05:11:50.749Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-06-25T05:11:50.749Z] > authorizing via signed-in user (akhil.chandewar00@gmail.com)
+[debug] [2024-06-25T05:11:50.749Z] [iam] checking project cloud-vault-c9888 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-06-25T05:11:50.752Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/cloud-vault-c9888:testIamPermissions [none]
+[debug] [2024-06-25T05:11:50.752Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/cloud-vault-c9888:testIamPermissions x-goog-quota-user=projects/cloud-vault-c9888
+[debug] [2024-06-25T05:11:50.752Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cloud-vault-c9888:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-06-25T05:11:52.226Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/cloud-vault-c9888:testIamPermissions 200
+[debug] [2024-06-25T05:11:52.227Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/cloud-vault-c9888:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-06-25T05:11:52.227Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/cloud-vault-c9888/serviceAccounts/cloud-vault-c9888@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-06-25T05:11:52.228Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/cloud-vault-c9888/serviceAccounts/cloud-vault-c9888@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-06-25T05:11:53.860Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/cloud-vault-c9888/serviceAccounts/cloud-vault-c9888@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2024-06-25T05:11:53.860Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/cloud-vault-c9888/serviceAccounts/cloud-vault-c9888@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-06-25T05:11:53.861Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/cloud-vault-c9888 [none]
+[debug] [2024-06-25T05:11:54.371Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/cloud-vault-c9888 200
+[debug] [2024-06-25T05:11:54.371Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/cloud-vault-c9888 {"projectId":"cloud-vault-c9888","projectNumber":"83849169528","displayName":"Cloud vault","name":"projects/cloud-vault-c9888","resources":{"hostingSite":"cloud-vault-c9888","storageBucket":"cloud-vault-c9888.appspot.com","locationId":"asia-south1"},"state":"ACTIVE","etag":"1_5401ec16-e342-44ac-bf86-7aef919ac06c"}
+[debug] [2024-06-25T05:11:57.402Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites pageToken=&pageSize=10
+[debug] [2024-06-25T05:11:58.413Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites 200
+[debug] [2024-06-25T05:11:58.413Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites {"sites":[{"name":"projects/cloud-vault-c9888/sites/cloud-vault-c9888","defaultUrl":"https://cloud-vault-c9888.web.app","appId":"1:83849169528:web:8fa1b9b4fd4338faf0fb8d","type":"DEFAULT_SITE"}]}
+[debug] [2024-06-25T05:11:58.414Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:83849169528:web:8fa1b9b4fd4338faf0fb8d/config [none]
+[debug] [2024-06-25T05:11:59.999Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:83849169528:web:8fa1b9b4fd4338faf0fb8d/config 200
+[debug] [2024-06-25T05:12:00.000Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/-/webApps/1:83849169528:web:8fa1b9b4fd4338faf0fb8d/config {"projectId":"cloud-vault-c9888","appId":"1:83849169528:web:8fa1b9b4fd4338faf0fb8d","storageBucket":"cloud-vault-c9888.appspot.com","locationId":"asia-south1","apiKey":"AIzaSyCW8VWM1DSaeofSRCoKzWDu7kTV5_sMbbs","authDomain":"cloud-vault-c9888.firebaseapp.com","messagingSenderId":"83849169528","measurementId":"G-049X23EELR"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 14.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2024-06-25T05:12:08.381Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites/cloud-vault-c9888 [none]
+[debug] [2024-06-25T05:12:09.262Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites/cloud-vault-c9888 200
+[debug] [2024-06-25T05:12:09.262Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/cloud-vault-c9888/sites/cloud-vault-c9888 {"name":"projects/cloud-vault-c9888/sites/cloud-vault-c9888","defaultUrl":"https://cloud-vault-c9888.web.app","appId":"1:83849169528:web:8fa1b9b4fd4338faf0fb8d","type":"DEFAULT_SITE"}
+[info]   ▲ Next.js 14.2.4
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully
+
+[info]    Linting and checking validity of types ...
+
+[info] 
+./src/components/Main/Main.js
+75:6  Warning: React Hook useEffect has missing dependencies: 'getFileList', 'getFolderList', and 'setParentFolderId'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/Sidebar/data/menu.js
+24:1  Warning: Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+./src/components/Storage/StorageInfo.js
+17:19  Warning: Assignments to the 'totalSize' variable from inside React Hook useEffect will be lost after each render. To preserve the value over time, store it in a useRef Hook and keep the mutable value in the '.current' property. Otherwise, you can move this variable directly inside useEffect.  react-hooks/exhaustive-deps
+
+./src/service/StorageSize.js
+12:1  Warning: Assign object to a variable before exporting as module default  import/no-anonymous-default-export
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
+
+[info]    Collecting page data ...
+
+[info] 
+
+[info] > Build error occurred
+
+[info] Error: Page "/folder/[folderId]" is missing "generateStaticParams()" so it cannot be used with "output: export" config.
+    at E:\projects\cloudvault\node_modules\next\dist\build\index.js:1294:59
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Span.traceAsyncFn (E:\projects\cloudvault\node_modules\next\dist\trace\trace.js:154:20)
+    at async Promise.all (index 5)
+    at async E:\projects\cloudvault\node_modules\next\dist\build\index.js:1172:17
+    at async Span.traceAsyncFn (E:\projects\cloudvault\node_modules\next\dist\trace\trace.js:154:20)
+    at async E:\projects\cloudvault\node_modules\next\dist\build\index.js:1095:124
+    at async Span.traceAsyncFn (E:\projects\cloudvault\node_modules\next\dist\trace\trace.js:154:20)
+    at async build (E:\projects\cloudvault\node_modules\next\dist\build\index.js:366:9)
+
+[debug] [2024-06-25T05:12:31.794Z] Error: ENOENT: no such file or directory, open 'E:\projects\cloudvault\.next\export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
