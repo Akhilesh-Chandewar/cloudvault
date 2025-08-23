@@ -4,5 +4,8 @@ build:
 run: build
 	@./bin/fs
 
+fmt:
+	@go fmt ./...
+
 test:
 	@go test ./...

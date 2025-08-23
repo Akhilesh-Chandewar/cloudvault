@@ -4,8 +4,8 @@ import "net"
 
 // Peer represents remote node
 type Peer interface {
-    Conn() net.Conn
-    Outbound() bool
+	Conn() net.Conn
+	Outbound() bool
 }
 
 // Transport that handles communication between peers beween nodes in the network.

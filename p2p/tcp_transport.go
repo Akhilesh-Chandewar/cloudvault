@@ -3,16 +3,19 @@ package p2p
 import (
 	"fmt"
 	"net"
+	// "sync"
 )
 
 // Tcp peer that representes remote node over tcp established connection
 type TCPPeer struct {
-	// conn is underlying connection between two peers
-	conn net.Conn
-
-	// if we dial and retrieve a connection -> outbound is true
-	// if we accept and retrieve a connection -> outbound is false
+	conn     net.Conn
 	outbound bool
+}
+
+type TCPTransportOpts struct {
+	ListenAddr    string
+	HandshakeFunc HandshakeFunc
+	Decoder       Decoder
 }
 
 func NewTcpPeer(conn net.Conn, outbound bool) *TCPPeer {
@@ -32,25 +35,22 @@ func (p *TCPPeer) Outbound() bool {
 
 // --- TCPTransport ---
 type TCPTransport struct {
-	listenAddress string
-	listener      net.Listener
-	shakeHands    HandshakeFunc
-	decoder       Decoder
-	// mu            sync.RWMutex
+	tcpTransportOpts TCPTransportOpts
+	listener         net.Listener
+	// mu               sync.RWMutex
 	peers map[net.Addr]Peer
 }
 
-func NewTCPTransport(listenAddress string) *TCPTransport {
+func NewTCPTransport(ops TCPTransportOpts) *TCPTransport {
 	return &TCPTransport{
-		shakeHands:    NOPHandshakeFunc,
-		listenAddress: listenAddress,
-		peers:         make(map[net.Addr]Peer),
+		tcpTransportOpts: ops,
+		peers:            make(map[net.Addr]Peer),
 	}
 }
 
 func (t *TCPTransport) ListenAndAccept() error {
 	var err error
-	t.listener, err = net.Listen("tcp", t.listenAddress)
+	t.listener, err = net.Listen("tcp", t.tcpTransportOpts.ListenAddr)
 	if err != nil {
 		return err
 	}
@@ -71,19 +71,31 @@ func (t *TCPTransport) startAcceptLoop() {
 	}
 }
 
-type Temp struct{}
-
 func (t *TCPTransport) handleConn(conn net.Conn) {
 	peer := NewTcpPeer(conn, true)
-	if err := t.shakeHands(peer); err != nil {
+	if err := t.tcpTransportOpts.HandshakeFunc(peer); err != nil {
 		fmt.Println("handshake failed:", err)
+		conn.Close()
 		return
 	}
-	msg := &Temp{}
+
+	msg := &Message{}
 	for {
-		if err := t.decoder.Decode(peer.conn, msg); err != nil {
+		if err := t.tcpTransportOpts.Decoder.Decode(peer.conn, msg); err != nil {
 			fmt.Printf("decode error: %v\n", err)
 			continue
 		}
+		msg.from = conn.RemoteAddr()
+		fmt.Printf("message: %v from %v\n", string(msg.payload) , msg.from)
 	}
+
+	// buf := make([]byte , 20000)
+	// for {
+	// 	n, err := peer.conn.Read(buf)
+	// 	if err != nil {
+	// 		fmt.Println("read error:", err)
+	// 		continue
+	// 	}
+	// 	fmt.Println(string(buf[:n]))
+	// }
 }
