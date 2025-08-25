@@ -33,10 +33,15 @@ func (p *TCPPeer) Outbound() bool {
 	return p.outbound
 }
 
+func (p *TCPPeer) Close() error {
+	return p.conn.Close()
+}
+
 // --- TCPTransport ---
 type TCPTransport struct {
 	tcpTransportOpts TCPTransportOpts
 	listener         net.Listener
+	rpcchan          chan RPC
 	// mu               sync.RWMutex
 	peers map[net.Addr]Peer
 }
@@ -44,8 +49,14 @@ type TCPTransport struct {
 func NewTCPTransport(ops TCPTransportOpts) *TCPTransport {
 	return &TCPTransport{
 		tcpTransportOpts: ops,
+		rpcchan:          make(chan RPC),
 		peers:            make(map[net.Addr]Peer),
 	}
+}
+
+//consumes implements the transport interface
+func (t *TCPTransport) Consume() <-chan RPC {
+	return t.rpcchan
 }
 
 func (t *TCPTransport) ListenAndAccept() error {
@@ -79,23 +90,13 @@ func (t *TCPTransport) handleConn(conn net.Conn) {
 		return
 	}
 
-	msg := &Message{}
+	rpc := &RPC{}
 	for {
-		if err := t.tcpTransportOpts.Decoder.Decode(peer.conn, msg); err != nil {
+		if err := t.tcpTransportOpts.Decoder.Decode(peer.conn, rpc); err != nil {
 			fmt.Printf("decode error: %v\n", err)
 			continue
 		}
-		msg.from = conn.RemoteAddr()
-		fmt.Printf("message: %v from %v\n", string(msg.payload) , msg.from)
+		rpc.from = conn.RemoteAddr()
+		fmt.Printf("message from=%s payload=%s\n", rpc.from.String(), string(rpc.payload))
 	}
-
-	// buf := make([]byte , 20000)
-	// for {
-	// 	n, err := peer.conn.Read(buf)
-	// 	if err != nil {
-	// 		fmt.Println("read error:", err)
-	// 		continue
-	// 	}
-	// 	fmt.Println(string(buf[:n]))
-	// }
 }
