@@ -23,6 +23,6 @@ func (dec NOPDecoder) Decode(r io.Reader, v *RPC) error {
 	if err != nil {
 		return err
 	}
-	v.payload = buf[:n]
+	v.Payload = buf[:n]
 	return nil
 }
