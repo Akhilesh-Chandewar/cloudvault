@@ -29,6 +29,6 @@ func main() {
 }
 
 func OnPeerConnect(p2p.Peer) error {
-	fmt.Println("DOing something with peer ")
+	fmt.Println("Doing something with peer ")
 	return nil
 }
