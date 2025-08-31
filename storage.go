@@ -151,6 +151,10 @@ func (s *Storage) ReadStream(key string) (io.ReadCloser, error) {
 	return f, nil
 }
 
+func (s *Storage) Write(key string, r io.Reader) error {
+	return s.WriteStream(key, r)
+}
+
 func (s *Storage) WriteStream(key string, r io.Reader) error {
 	pathKey := s.options.PathTransform(key)
 	if err := os.MkdirAll(pathKey.PathName, os.ModePerm); err != nil {
