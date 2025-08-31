@@ -26,3 +26,6 @@ func (dec NOPDecoder) Decode(r io.Reader, v *RPC) error {
 	v.Payload = buf[:n]
 	return nil
 }
+
+// Pick your default decoder here
+var DefaultDecoder = GOBDecoder{} // or NOPDecoder{}
