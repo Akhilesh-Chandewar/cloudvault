@@ -51,29 +51,62 @@ func TestTransformFunc(t *testing.T) {
 }
 
 func TestStorage(t *testing.T) {
+	store := newStorage()
+	defer tearDown(store)
+
+	for i := range 50 {
+		key := fmt.Sprintf("testdata-%d", i)
+		data := []byte("example data")
+
+		err := store.WriteStream(key, bytes.NewReader(data))
+		if err != nil {
+			t.Error(err)
+		}
+
+		ok, err := store.Has(key)
+		if err != nil {
+			t.Errorf("Unexpected error in Has: %v", err)
+		}
+		if !ok {
+			t.Error("Expected key to exist, but it does not")
+		}
+
+		readData, err := store.Read(key)
+		if err != nil {
+			t.Error(err)
+		}
+
+		b, _ := io.ReadAll(readData)
+		if !bytes.Equal(b, data) {
+			t.Errorf("Expected data %s but got %s", string(data), string(b))
+		}
+
+		if err := store.Delete(key); err != nil {
+			t.Error(err)
+		}
+
+		ok, err = store.Has(key)
+		if err != nil {
+			t.Errorf("Unexpected error in Has after delete: %v", err)
+		}
+		if ok {
+			t.Error("Expected key to be deleted, but it still exists")
+		}
+	}
+
+}
+
+func newStorage() *Storage {
 	storeOpts := StorageOptions{
 		PathTransform: CASPathTransform,
 	}
 
-	store := NewStorage(storeOpts)
+	return NewStorage(storeOpts)
+}
 
-	key := "testdata"
-	data := []byte("example data")
-
-	err := store.WriteStream(key, bytes.NewReader(data))
+func tearDown(store *Storage) {
+	err := store.clear()
 	if err != nil {
-		t.Error(err)
+		fmt.Println("Error during teardown:", err)
 	}
-
-	readData, err := store.Read(key)
-	if err != nil {
-		t.Error(err)
-	}
-
-	b, _ := io.ReadAll(readData)
-	if !bytes.Equal(b, data) {
-		t.Errorf("Expected data %s but got %s", string(data), string(b))
-	}
-
-	store.Delete(key)
 }

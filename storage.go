@@ -45,6 +45,9 @@ type PathKey struct {
 }
 
 func (p PathKey) FullName() string {
+	if p.PathName == "" {
+		return p.FileName
+	}
 	return fmt.Sprintf("%s/%s", p.PathName, p.FileName)
 }
 
@@ -73,7 +76,11 @@ func NewStorage(options StorageOptions) *Storage {
 	options.PathTransform = func(key string) PathKey {
 		pk := originalTransform(key)
 		if options.Root != "" {
-			pk.PathName = fmt.Sprintf("%s/%s", options.Root, pk.PathName)
+			if pk.PathName != "" {
+				pk.PathName = fmt.Sprintf("%s/%s", options.Root, pk.PathName)
+			} else {
+				pk.PathName = options.Root
+			}
 		}
 		return pk
 	}
@@ -95,6 +102,10 @@ func (s *Storage) Has(key string) (bool, error) {
 	return false, err
 }
 
+func (s *Storage) clear() error {
+	return os.RemoveAll(s.options.Root)
+}
+
 func (s *Storage) Delete(key string) error {
 	pathKey := s.options.PathTransform(key)
 	fullPath := pathKey.FullName()
@@ -104,7 +115,7 @@ func (s *Storage) Delete(key string) error {
 	}
 
 	dir := pathKey.PathName
-	for dir != "" && dir != "." {
+	for dir != "" && dir != "." && dir != s.options.Root {
 		err := os.Remove(dir)
 		if err != nil {
 			break
@@ -133,8 +144,7 @@ func (s *Storage) Read(key string) (io.Reader, error) {
 
 func (s *Storage) ReadStream(key string) (io.ReadCloser, error) {
 	pathKey := s.options.PathTransform(key)
-	pathAndFile := pathKey.FullName()
-	f, err := os.Open(pathAndFile)
+	f, err := os.Open(pathKey.FullName())
 	if err != nil {
 		return nil, err
 	}
@@ -147,8 +157,7 @@ func (s *Storage) WriteStream(key string, r io.Reader) error {
 		return err
 	}
 
-	pathAndFile := pathKey.FullName()
-	f, err := os.Create(pathAndFile)
+	f, err := os.Create(pathKey.FullName())
 	if err != nil {
 		return err
 	}
@@ -159,6 +168,6 @@ func (s *Storage) WriteStream(key string, r io.Reader) error {
 		return err
 	}
 
-	fmt.Printf("wrote %d bytes to %s\n", n, pathAndFile)
+	fmt.Printf("wrote %d bytes to %s\n", n, pathKey.FullName())
 	return nil
 }
