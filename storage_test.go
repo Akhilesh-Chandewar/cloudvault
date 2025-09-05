@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"testing"
 )
 
@@ -36,7 +37,7 @@ func TestDelete(t *testing.T) {
 func TestTransformFunc(t *testing.T) {
 	key := "my best pics"
 	pathKey := CASPathTransform(key)
-	fmt.Println("Transformed path:", pathKey)
+	log.Println("Transformed path:", pathKey)
 
 	if pathKey.FileName != key {
 		t.Errorf("Expected FileName %s but got %s", key, pathKey.FileName)
@@ -107,6 +108,6 @@ func newStorage() *Storage {
 func tearDown(store *Storage) {
 	err := store.clear()
 	if err != nil {
-		fmt.Println("Error during teardown:", err)
+		log.Println("Error during teardown:", err)
 	}
 }

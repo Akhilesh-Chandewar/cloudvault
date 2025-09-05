@@ -1,7 +1,7 @@
 package p2p
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"net"
 	// "sync"
@@ -59,6 +59,10 @@ func (t *TCPTransport) Consume() <-chan RPC {
 	return t.rpcchan
 }
 
+func (t *TCPTransport) Close() error {
+	return t.listener.Close()
+}
+
 func (t *TCPTransport) ListenAndAccept() error {
 	var err error
 	t.listener, err = net.Listen("tcp", t.tcpTransportOpts.ListenAddr)
@@ -75,12 +79,16 @@ func (t *TCPTransport) ListenAndAccept() error {
 func (t *TCPTransport) startAcceptLoop() {
 	for {
 		conn, err := t.listener.Accept()
+		if errors.Is(err, net.ErrClosed) {
+			log.Println("Listener closed, stopping accept loop")
+			return
+		}
 		if err != nil {
-			fmt.Println("accept error:", err)
+			log.Println("accept error:", err)
 			continue
 		}
 
-		fmt.Println("new connection from:", conn.RemoteAddr())
+		log.Println("new connection from:", conn.RemoteAddr())
 		go t.handleConn(conn)
 	}
 }
@@ -88,7 +96,7 @@ func (t *TCPTransport) startAcceptLoop() {
 func (t *TCPTransport) handleConn(conn net.Conn) {
 	var err error
 	defer func() {
-		fmt.Println("Dropping peer connection", err)
+		log.Println("Dropping peer connection", err)
 		conn.Close()
 	}()
 
@@ -106,7 +114,7 @@ func (t *TCPTransport) handleConn(conn net.Conn) {
 	rpc := RPC{}
 	for {
 		if err := t.tcpTransportOpts.Decoder.Decode(peer.conn, &rpc); err != nil {
-			fmt.Printf("decode error: %v\n", err)
+			log.Printf("decode error: %v\n", err)
 			continue
 		}
 		rpc.From = conn.RemoteAddr()

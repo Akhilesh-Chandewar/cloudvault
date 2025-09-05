@@ -172,6 +172,6 @@ func (s *Storage) WriteStream(key string, r io.Reader) error {
 		return err
 	}
 
-	fmt.Printf("wrote %d bytes to %s\n", n, pathKey.FullName())
+	log.Printf("wrote %d bytes to %s\n", n, pathKey.FullName())
 	return nil
 }
