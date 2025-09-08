@@ -63,6 +63,15 @@ func (t *TCPTransport) Close() error {
 	return t.listener.Close()
 }
 
+func (t *TCPTransport) Dial(address string) error {
+	conn, err := net.Dial("tcp", address)
+	if err != nil {
+		return err
+	}
+	go t.handleConn(conn, true)
+	return nil
+}
+
 func (t *TCPTransport) ListenAndAccept() error {
 	var err error
 	t.listener, err = net.Listen("tcp", t.tcpTransportOpts.ListenAddr)
@@ -89,18 +98,18 @@ func (t *TCPTransport) startAcceptLoop() {
 		}
 
 		log.Println("new connection from:", conn.RemoteAddr())
-		go t.handleConn(conn)
+		go t.handleConn(conn, false)
 	}
 }
 
-func (t *TCPTransport) handleConn(conn net.Conn) {
+func (t *TCPTransport) handleConn(conn net.Conn, outbound bool) {
 	var err error
 	defer func() {
 		log.Println("Dropping peer connection", err)
 		conn.Close()
 	}()
 
-	peer := NewTcpPeer(conn, true)
+	peer := NewTcpPeer(conn, outbound)
 	if err := t.tcpTransportOpts.HandshakeFunc(peer); err != nil {
 		return
 	}
