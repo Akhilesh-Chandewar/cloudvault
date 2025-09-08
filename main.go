@@ -26,19 +26,24 @@ func makeServer(listenAddr string, nodes ...string) *FileServer {
 		BootstrapAddrs: nodes,
 	}
 
-	// create file server
-	return NewFileServer(fileServerOptions)
+	fs := NewFileServer(fileServerOptions)
+
+	fs.Options.TransportOpts.OnPeerConnect = func(peer *p2p.TCPPeer) error {
+		return fs.OnPeer(peer)
+	}
+
+	return fs
 
 }
 
 func main() {
- s1 := makeServer(":3000" , "")
- s2 := makeServer(":4000" , ":3000")
+	s1 := makeServer(":3000", "")
+	s2 := makeServer(":4000", ":3000")
 
- go func() {
-	log.Fatal(s1.Start())
- }()
- s2.Start()
+	go func() {
+		log.Fatal(s1.Start())
+	}()
+	s2.Start()
 
- log.Println("Servers stopped")	
+	log.Println("Servers stopped")
 }

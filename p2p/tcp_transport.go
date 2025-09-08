@@ -17,7 +17,7 @@ type TCPTransportOpts struct {
 	ListenAddr    string
 	HandshakeFunc HandshakeFunc
 	Decoder       Decoder
-	OnPeerConnect func(Peer) error
+	OnPeerConnect func(*TCPPeer) error
 }
 
 func NewTcpPeer(conn net.Conn, outbound bool) *TCPPeer {
@@ -33,6 +33,10 @@ func (p *TCPPeer) Conn() net.Conn {
 
 func (p *TCPPeer) Outbound() bool {
 	return p.outbound
+}
+
+func (p *TCPPeer) RemoteAddr() net.Addr {
+	return p.conn.RemoteAddr()
 }
 
 func (p *TCPPeer) Close() error {

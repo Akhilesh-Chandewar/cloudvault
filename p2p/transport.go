@@ -4,6 +4,7 @@ import "net"
 
 // Peer represents remote node
 type Peer interface {
+	RemoteAddr() net.Addr
 	Conn() net.Conn
 	Outbound() bool
 	Close() error
